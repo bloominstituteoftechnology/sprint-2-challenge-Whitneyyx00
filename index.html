@@ -6,33 +6,131 @@
   <script id="challenge">
     // 👉 CHALLENGE 1
     function profileActivation(profile, reason) {
-
+      if (profile.active) {
+        if (reason !== undefined) {
+          profile.active = false;
+          profile.reason = reason;
+        } else {
+          return "confirm status manually";
+        }
+      } else {
+        profile.active = true;
+        delete profile.reason;
+      }
+      return profile;
     }
 
     // 👉 CHALLENGE 2
     function mineSweeper(grid, x, y) {
+      // Check if coordinates are valid
+      if (x < 1 || x > 3 || y < 1 || y > 3) {
+        return "invalid coordinates";
+      }
 
+      // Get the value of the cell at the given coordinates
+      let cell = grid[y - 1][x - 1];
+
+      // Determine the result based on the cell value
+      if (cell === "🟥") {
+        return "🟥 💀";
+      } else {
+        return "🟦 🥳";
+      }
     }
 
     // 👉 CHALLENGE 3
     function booleanize(obj) {
+      // Check if obj is not an object
+      if (typeof obj !== 'object' || obj === null || Array.isArray(obj)) {
+        return "input is not an object";
+      }
 
+      // Iterate over each property in the object
+      for (let prop in obj) {
+        // Check if property name exceeds 9 characters
+        if (prop.length > 9) {
+          return "shorten all prop names to 9 chars or less";
+        }
+
+        // Transform value based on requirements
+        if (obj[prop] === 0) {
+          obj[prop] = false;
+        } else if (obj[prop] === 1) {
+          obj[prop] = true;
+        } else if (obj[prop] === null) {
+          delete obj[prop];
+        }
+      }
+      return obj;
     }
 
     // 👉 CHALLENGE 4
     function scrub(text, forbidden) {
+      // Check if text is empty or there are no forbidden words
+      if (text.length === 0 || forbidden.length === 0) {
+        return text;
+      }
 
+      // Split text into words and remove punctuation
+      const words = text.split(/\s+/).map(word => word.replace(/[^\w]/g, ''));
+
+      // Iterate over each word
+      for (let i = 0; i < words.length; i++) {
+        // Check if word is in forbidden array
+        if (forbidden.includes(words[i].toLowerCase())) {
+          // Replace word with "x" characters of equal length
+          words[i] = 'x'.repeat(words[i].length);
+        }
+      }
+
+      // Join words back into text
+      return words.join(' ');
     }
 
     // 👉 CHALLENGE 5 (bonus, NOT graded)
     function normalizePhoneNumber(num) {
+      // Validate input length
+      if (num.length !== 10) {
+        return "Invalid phone number";
+      }
 
+      // Format the number using template
+      const formattedNumber = `(${num.slice(0, 3)}) ${num.slice(3, 6)}-${num.slice(6)}`;
+
+      return formattedNumber;
     }
+
+    // Test cases
+    console.log(normalizePhoneNumber("9876543210")); // "(987) 654-3210"
+    console.log(normalizePhoneNumber("1111111111")); // "(111) 111-1111"
 
     // 👉 CHALLENGE 6 (bonus, NOT graded)
     function diceRolls() {
+      let throws = 0; // Total number of rolls
+      let counter = 0; // Consecutive number of sixes
 
+      while (true) {
+        const roll = Math.floor(Math.random() * 6) + 1; // Simulate a six-sided die roll
+
+        throws++; // Increment total rolls
+
+        if (roll === 6) {
+          counter++; // Increment consecutive sixes
+
+          if (counter === 3) {
+            break; // Break out of loop when three consecutive sixes are rolled
+          }
+        } else {
+          counter = 0; // Reset consecutive sixes counter if a non-six is rolled
+        }
+      }
+
+      return throws; // Return total number of rolls
     }
+
+    // Test the function
+    let result = diceRolls();
+    console.log(result); // Output will vary each time the function is run
 
     // 🧪 DO NOT make any changes below this line ===================
     globalThis.challengeVersion = 1
